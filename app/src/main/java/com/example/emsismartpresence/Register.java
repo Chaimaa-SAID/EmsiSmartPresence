@@ -51,10 +51,10 @@ public class Register extends AppCompatActivity {
     }
 
     private void registerUser() {
+        String nameText = etname.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = confpassword.getText().toString().trim();
-        String nameText = etname.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Remplissez tous les champs", Toast.LENGTH_SHORT).show();
@@ -68,9 +68,11 @@ public class Register extends AppCompatActivity {
                             Toast.makeText(this, "Inscription réussie", Toast.LENGTH_SHORT).show();
                             String userId = mAuth.getCurrentUser().getUid();
                             store_user_firestore(userId, email, nameText);
+                            Toast.makeText(this, "Inscription réussie, veuillez vous connecter", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Register.this, Signin.class);
                             intent.putExtra("name", nameText);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(this, "Erreur : " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

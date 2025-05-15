@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">EmsiSmartPresence</string>
     <string name="logo">Logo Description</string>
+    <string name="login_title">Login</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Mot de passe</string>
+    <string name="login_button">Se connecter</string>
+    <string name="register_prompt">Vous n\'avez pas de compte ? Inscrivez-vous</string>
+    <string name="logo_emsi">Logo EMSI</string>
 </resources>

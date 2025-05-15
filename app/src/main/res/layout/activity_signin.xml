@@ -5,80 +5,93 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:padding="20dp"
     android:background="@color/white"
     tools:context=".Signin">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="219dp"
-        android:layout_height="48dp"
-        android:backgroundTint="@color/green"
-        android:text="Se connecter"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="79dp"
-        tools:layout_editor_absoluteY="543dp"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="280dp"
-        android:layout_height="51dp"
-        android:background="@drawable/input_background"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="Email"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="50dp"
-        tools:layout_editor_absoluteY="352dp" />
-
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="280dp"
-        android:layout_height="48dp"
-        android:background="@drawable/input_background"
-        android:ems="10"
-        android:text="Mot de passe"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="49dp"
-        tools:layout_editor_absoluteY="423dp" />
-
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="365dp"
+        android:layout_width="300dp"
         android:layout_height="80dp"
-        android:layout_gravity="center"
         android:src="@drawable/emsi"
-        tools:layout_editor_absoluteX="7dp"
-        tools:layout_editor_absoluteY="117dp"
-        tools:ignore="MissingConstraints" />
+        android:contentDescription="@string/logo_emsi"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp" />
 
     <TextView
-
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Login"
+        android:text="@string/login_title"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="159dp"
-        tools:layout_editor_absoluteY="251dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:background="@drawable/input_background"
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress"
+        android:textColorHint="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        />
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:background="@drawable/input_background"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        android:autofillHints="password"
+        android:textColorHint="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/editTextTextEmailAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@color/green"
+        android:text="@string/login_button"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/editTextTextPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
 
     <TextView
+        android:id="@+id/linkSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Don't have account?Register"
+        android:text="@string/register_prompt"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="81dp"
-        tools:layout_editor_absoluteY="666dp"
-        tools:ignore="MissingConstraints" />
-
+        app:layout_constraintTop_toBottomOf="@id/button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
