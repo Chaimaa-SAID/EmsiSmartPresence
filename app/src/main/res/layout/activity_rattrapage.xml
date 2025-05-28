@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleRattrapage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rattrapages à venir"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:paddingBottom="20dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerRattrapage"
+        android:layout_width="match_parent"
+        android:layout_height="677dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRetour"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginTop="16dp"
+        android:text="Retour à l'accueil"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:backgroundTint="#388E3C"
+        app:cornerRadius="12dp"
+        app:iconGravity="start"
+        app:iconPadding="8dp"
+        app:iconTint="@android:color/white"
+        app:rippleColor="#66BB6A" />
+
+
+
+
+</LinearLayout>

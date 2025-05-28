@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.emsismartpresence">
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-
 
     <application
         android:allowBackup="true"
@@ -18,25 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EmsiSmartPresence"
-        tools:targetApi="31" >
+        tools:targetApi="31">
 
-        <!--
-             TODO: Before you run your application, you need a Google Maps API key.
-
-             To get one, follow the directions here:
-
-                https://developers.google.com/maps/documentation/android-sdk/get-api-key
-
-             Once you have your API key (it starts with "AIza"), define a new property in your
-             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
-             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
-        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyBQ_nz2XhxK4H_bc0OL2FHJpwI5mhlqm5k" />
 
-        <activity
-            android:name=".Signin"
+        <activity android:name=".Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,8 +32,30 @@
         </activity>
 
         <activity
+            android:name=".Signin"
+            android:exported="true">
+        </activity>
+
+        <activity
             android:name=".Register"
             android:exported="true" />
+        <activity
+        android:name=".Assistant_virtuel"
+        android:exported="true" />
+
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".MapsFragment"
+            android:exported="true" />
+        <activity android:name=".Rattrapage" />
+        <activity android:name=".Absence" />
+        <activity android:name=".Document" />
+        <activity android:name=".TimeDisplayActivity" />
+        <activity android:name=".AddTimeActivity" />
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Signin extends AppCompatActivity {
     private EditText etEmail, etPassword;
@@ -64,14 +65,29 @@ public class Signin extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Authentification réussie", Toast.LENGTH_SHORT).show();
-                        // Redirection vers la page principale après connexion
-                        Intent intent = new Intent(Signin.this, Home.class);
-                        startActivity(intent);
-                        finish();
+                        String uid = mAuth.getCurrentUser().getUid();
+
+                        // Récupérer le nom dans Firestore
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                String name = documentSnapshot.getString("name");
+                                // Lancer MainActivity avec le nom
+                                Intent intent = new Intent(Signin.this, MainActivity.class);
+                                intent.putExtra("username", name);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(Signin.this, "Utilisateur introuvable", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(Signin.this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+
                     } else {
                         Toast.makeText(this, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 }
