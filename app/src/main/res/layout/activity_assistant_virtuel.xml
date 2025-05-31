@@ -27,11 +27,5 @@
         android:textSize="16sp"
         android:textColor="#000000" />
 
-    <Button
-        android:id="@+id/btnRetour"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
-        android:text="Retour à l'accueil" />
 
 </LinearLayout>

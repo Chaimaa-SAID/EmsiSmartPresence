@@ -44,12 +44,6 @@ public class Assistant_virtuel extends AppCompatActivity {
                 sendMessageToGemini(userMessage);
             }
         });
-        Button btnRetour = findViewById(R.id.btnRetour);
-        btnRetour.setOnClickListener(v -> {
-            Intent intent = new Intent(Assistant_virtuel.this, MainActivity.class); // remplace MainActivity si le nom est différent
-            startActivity(intent);
-            finish(); // facultatif, pour ne pas revenir ici quand on appuie sur "retour"
-        });
 
     }
 

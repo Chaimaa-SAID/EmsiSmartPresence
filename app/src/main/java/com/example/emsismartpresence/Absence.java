@@ -1,6 +1,5 @@
 package com.example.emsismartpresence;
 
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -52,10 +50,9 @@ public class Absence extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() == null) {
-            // Not logged in, redirect to login activity
             Toast.makeText(this, "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, Signin.class)); // change LoginActivity to your actual login activity
-            finish(); // prevent returning here
+            startActivity(new Intent(this, Signin.class));
+            finish();
             return;
         }
 
@@ -70,84 +67,72 @@ public class Absence extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
 
         db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new StudentAdapter(studentList);
         recyclerView.setAdapter(adapter);
 
         loadSpinners();
-        loadStudents();
         setupSpinnerListeners();
+
 
         textDate.setOnClickListener(v -> showDatePicker());
         btnSave.setOnClickListener(v -> saveAbsences());
     }
 
     private void loadSpinners() {
-        String[] groups = {"G5", "Groupe 2"};
-        String[] sites = {"Centre1", "Site B"};
-        String[] classes = {"4IIR", "Classe B", "Classe C"};
+        String[] groups = {"G5", "G2"};
+        String[] sites = {"Centre1", "Centre2","Roudani", "Moulay Youssef", "Maarif"};
+        String[] classes = {"4IIR", "3IIR", "5IIR"};
 
         spinnerGroup.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, groups));
         spinnerSite.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sites));
         spinnerClass.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, classes));
     }
 
+    private void setupSpinnerListeners() {
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Ici tu peux remettre le filtre si besoin plus tard
+                loadStudents(); // réactivé ici si besoin
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+        spinnerClass.setOnItemSelectedListener(listener);
+        spinnerGroup.setOnItemSelectedListener(listener);
+    }
+
+
     private void loadStudents() {
-        String selectedClass = spinnerClass.getSelectedItem().toString();
         String selectedGroup = spinnerGroup.getSelectedItem().toString();
+        String selectedClass = spinnerClass.getSelectedItem().toString();
 
         db.collection("students")
-                .whereEqualTo("class", selectedClass)
                 .whereEqualTo("group", selectedGroup)
+                .whereEqualTo("class", selectedClass)
                 .get()
+
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     studentList.clear();
+                    Log.d("DEBUG", "Nombre d'étudiants récupérés : " + queryDocumentSnapshots.size());
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String id = document.getId();
                         String name = document.getString("name");
-                        // Default to present unless specified otherwise
-                        boolean present = document.getBoolean("present") != null
-                                ? document.getBoolean("present")
-                                : true;
-
+                        boolean present = document.contains("present") ? document.getBoolean("present") : true;
                         studentList.add(new Student(id, name, present));
                     }
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error loading students: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Erreur lors du chargement des étudiants : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Erreur loadStudents", e);
                 });
-        Button btnRetour = findViewById(R.id.btnRetour);
-        btnRetour.setOnClickListener(v -> {
-            Intent intent = new Intent(Absence.this, MainActivity.class); // remplace MainActivity si le nom est différent
-            startActivity(intent);
-            finish(); // facultatif, pour ne pas revenir ici quand on appuie sur "retour"
-        });
-
     }
-    private void setupSpinnerListeners() {
-        spinnerClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                loadStudents();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
 
-        spinnerGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                loadStudents();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
     private void showDatePicker() {
         Calendar c = Calendar.getInstance();
         DatePickerDialog dpd = new DatePickerDialog(this, (view, year, month, day) -> {
@@ -156,28 +141,28 @@ public class Absence extends AppCompatActivity {
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dpd.show();
     }
+
     private boolean validateForm() {
         if (textDate.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Veuillez sélectionner une date", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (studentList.isEmpty()) {
-            Toast.makeText(this, "No students to save", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Aucun étudiant à enregistrer", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-// Then in saveAbsences():
-
     private void saveAbsences() {
+        if (!validateForm()) return;
+
         String group = spinnerGroup.getSelectedItem().toString();
         String site = spinnerSite.getSelectedItem().toString();
         String selectedClass = spinnerClass.getSelectedItem().toString();
         String date = textDate.getText().toString();
         String remarque = editRemarks.getText().toString();
 
-        // Prepare the students array
         List<Map<String, Object>> studentsData = new ArrayList<>();
         for (Student student : adapter.getStudents()) {
             Map<String, Object> studentData = new HashMap<>();
@@ -187,7 +172,6 @@ public class Absence extends AppCompatActivity {
             studentsData.add(studentData);
         }
 
-        // Create the absence document
         Map<String, Object> absenceData = new HashMap<>();
         absenceData.put("profId", auth.getUid());
         absenceData.put("group", group);
@@ -197,25 +181,21 @@ public class Absence extends AppCompatActivity {
         absenceData.put("remarque", remarque);
         absenceData.put("students", studentsData);
 
-
         db.collection("absences")
                 .add(absenceData)
                 .addOnSuccessListener(docRef -> {
-                    Toast.makeText(this, "Absence saved successfully!", Toast.LENGTH_SHORT).show();
-                    // Optional: Clear the form after successful save
+                    Toast.makeText(this, "Absence enregistrée avec succès !", Toast.LENGTH_SHORT).show();
                     textDate.setText("");
                     editRemarks.setText("");
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error saving absence: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Firestore", "Error saving absence", e);
+                    Toast.makeText(this, "Erreur lors de l'enregistrement : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Erreur saveAbsences", e);
                 });
-        if (!validateForm()) return;
     }
 
-    // ------- Classes internes --------
-
-    public class Student {
+    // ----- Classe Student -----
+    public static class Student {
         private String id;
         private String name;
         private boolean present;
@@ -234,8 +214,9 @@ public class Absence extends AppCompatActivity {
         public void setPresent(boolean present) { this.present = present; }
     }
 
+    // ----- Adapter pour RecyclerView -----
     public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
-        private List<Student> studentList;
+        private final List<Student> studentList;
 
         public StudentAdapter(List<Student> list) {
             this.studentList = list;
@@ -256,8 +237,8 @@ public class Absence extends AppCompatActivity {
         public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
             Student s = studentList.get(position);
             holder.name.setText(s.getName());
+            holder.present.setOnCheckedChangeListener(null); // reset listener to avoid recycle issues
             holder.present.setChecked(s.isPresent());
-
             holder.present.setOnCheckedChangeListener((buttonView, isChecked) -> s.setPresent(isChecked));
         }
 
